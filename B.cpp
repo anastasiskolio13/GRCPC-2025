@@ -11,7 +11,6 @@ bool comparePresentations(presentation A, presentation B) {
     return A.S < B.S;
 }
 
-
 vector<presentation> P(MAXN + 2);
 int N;
 int T;
