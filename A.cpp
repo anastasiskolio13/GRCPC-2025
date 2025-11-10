@@ -3,6 +3,8 @@
 #define INF 2e9
 using namespace std;
 
+// testing
+
 vector<int> A(MAXN);
 int N;
 
