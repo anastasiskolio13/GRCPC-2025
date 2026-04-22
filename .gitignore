@@ -10,3 +10,11 @@
 *.idb
 *.exe
 *.tlog/
+*Editorial.aux
+*Editorial.fdb_latexmk
+*Editorial.fls
+*Editorial.log
+*Editorial.out
+Editorial.synctex.gz
+*GRCPCLogo.png
+*Editorial.tex
