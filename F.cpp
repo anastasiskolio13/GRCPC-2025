@@ -1,93 +1,143 @@
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+#include <array>
 #define MAXN 100000
 #define MAXQ 100000
+#define MAXVAL 1000000000
 using namespace std;
 
-map<int, vector<pair<int, int>>> Q1;
-map<int, vector<pair<int, int>>> Q2;
-set<pair<int, int>> S;
 vector<int> A(MAXN);
-vector<int> TP(MAXN);
-vector<int> AP(MAXN);
-vector<array<int, 3>> B(MAXQ);
+vector<vector<pair<int, int>>> Q1(MAXN);
+vector<vector<pair<int, int>>> Q2(MAXN);
+vector<array<int, 3>> B(MAXN);
 int N;
 int Q;
 int L1;
 int L2;
 
-class SegmentTree {
-private:
-    vector<int> T;
-public:
-    SegmentTree() {
-        T.resize(4 * N, 0);
-    }
-
-    void Update(int lo, int hi, int v, int i, int x) {
-        if (lo == hi) {
-            T[v] = x;
-            return;
-        }
-        int mid = (lo + hi) / 2;
-        if (TP[i] <= mid)
-            Update(lo, mid, 2 * v + 1, i, x);
-        else
-            Update(mid + 1, hi, 2 * v + 2, i, x);
-        T[v] = T[2 * v + 1] + T[2 * v + 2];
-    }
-
-    int Kth(int lo, int hi, int v, int k) {
-        if (lo == hi)
-            return A[AP[lo]];
-        int mid = (lo + hi) / 2;
-        if (T[2 * v + 1] >= k)
-            return Kth(lo, mid, 2 * v + 1, k);
-        else
-            return Kth(mid + 1, hi, 2 * v + 2, k - T[2 * v + 1]);
-    }
+struct Node
+{
+	int value;
+	Node* left;
+	Node* right;
 };
 
-int main() {
-    scanf("%d %d %d %d", &N, &Q, &L1, &L2);
-    for (int i = 0; i < N; ++i) {
-        scanf("%d", &A[i]);
-        S.insert({A[i], i});
-    }
-    int i = 0;
-    for (auto [_, index] : S) {
-        TP[index] = i;
-        AP[i] = index;
-        ++i;
-    }
-    for (int i = 0; i < Q; ++i) {
-        int a, b, c;
-        scanf("%d %d %d", &a, &b, &c);
-        a == 1 ? Q1[b + L1 - 2].push_back({c, i}) : Q2[b + L2 - 2].push_back({c, i});
-    }
-    SegmentTree T1;
-    for (int i = 0; i < N; ++i) {
-        if (i - L1 >= 0)
-            T1.Update(0, N - 1, 0, i - L1, 0);
-        T1.Update(0, N - 1, 0, i, 1);
-        for (auto [k, index] : Q1[i]) {
-            int minimumElement = T1.Kth(0, N - 1, 0, 1);
-            int kthElement = T1.Kth(0, N - 1, 0, k);
-            int maximumElement = T1.Kth(0, N - 1, 0, L1);
-            B[index] = {minimumElement, kthElement, maximumElement};
-        }
-    }
-    SegmentTree T2;
-    for (int i = 0; i < N; ++i) {
-        if (i - L2 >= 0)
-            T2.Update(0, N - 1, 0, i - L2, 0);
-        T2.Update(0, N - 1, 0, i, 1);
-        for (auto [k, index] : Q2[i]) {
-            int minimumElement = T2.Kth(0, N - 1, 0, 1);
-            int kthElement = T2.Kth(0, N - 1, 0, k);
-            int maximumElement = T2.Kth(0, N - 1, 0, L2);
-            B[index] = {minimumElement, kthElement, maximumElement};
-        }
-    }
-    for (int i = 0; i < Q; ++i)
-        printf("%d %d %d\n", B[i][0], B[i][1], B[i][2]);
+Node* root = new Node();
+
+void Update(const int i, const int x, Node*& current = root, int lo = 0, int hi = MAXVAL)
+{
+	if (current == nullptr)
+	{
+		current = new Node();
+	}
+
+	current->value += x;
+
+	if (lo == hi)
+	{
+		return;
+	}
+
+	int mid = (lo + hi) / 2;
+
+	if (i <= mid)
+	{
+		Update(i, x, current->left, lo, mid);
+	}
+	else
+	{
+		Update(i, x, current->right, mid + 1, hi);
+	}
+}
+
+int Kth(const int k, Node* current = root, int lo = 0, int hi = MAXVAL)
+{
+	if (lo == hi)
+	{
+		return lo;
+	}
+
+	int mid = (lo + hi) / 2;
+
+	if (current->left && current->left->value >= k)
+	{
+		return Kth(k, current->left, lo, mid);
+	}
+	else
+	{
+		return Kth(k - (current->left ? current->left->value : 0), current->right, mid + 1, hi);
+	}
+}
+
+int main()
+{
+	scanf("%d %d %d %d", &N, &Q, &L1, &L2);
+
+	for (int i = 0; i < N; ++i)
+	{
+		scanf("%d", &A[i]);
+	}
+
+	for (int i = 0; i < Q; ++i)
+	{
+		int A;
+		int B;
+		int C;
+
+		scanf("%d %d %d", &A, &B, &C);
+
+		if (A == 1)
+		{
+			Q1[--B].push_back(make_pair(C, i));
+		}
+		else
+		{
+			Q2[--B].push_back(make_pair(C, i));
+		}
+	}
+
+	for (int i = N - 1; i >= 0; --i)
+	{
+		if (N - 1 - L1 >= i)
+		{
+			Update(A[i + L1], -1);
+		}
+		
+		Update(A[i], 1);
+
+		for (auto [k, index] : Q1[i])
+		{
+			int smallest = Kth(1);
+			int kth = Kth(k);
+			int largest = Kth(L1);
+
+			B[index] = { smallest, kth, largest };
+		}
+	}
+
+	root = new Node();
+
+	for (int i = N - 1; i >= 0; --i)
+	{
+		if (N - 1 - L2 >= i)
+		{
+			Update(A[i + L2], -1);
+		}
+
+		Update(A[i], 1);
+
+		for (auto [k, index] : Q2[i])
+		{
+			int smallest = Kth(1);
+			int kth = Kth(k);
+			int largest = Kth(L2);
+
+			B[index] = { smallest, kth, largest };
+		}
+	}
+
+	for (int i = 0; i < Q; ++i)
+	{
+		printf("%d %d %d\n", B[i][0], B[i][1], B[i][2]);
+	}
 }
