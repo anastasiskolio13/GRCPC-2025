@@ -8,7 +8,7 @@ constexpr long long MOD = 1e9 + 7;
 
 long long calculateDP(long long X)
 {
-	vector<int> D = { 0 };
+	vector<int> D = {0};
 
 	while (X > 0)
 	{
@@ -19,7 +19,7 @@ long long calculateDP(long long X)
 
 	const int L = D.size() - 1;
 
-	long long dp[D.size()][16][2];
+	long long dp[D.size()][MAX_XOR + 1][2];
 
 	dp[0][0][0] = dp[0][0][1] = 1;
 
@@ -55,15 +55,14 @@ long long calculateDP(long long X)
 	for (int y = 0; y <= MAX_XOR; ++y)
 	{
 		long long ans_y = ((dp[L][y][0] % MOD) * y) % MOD;
-		
+
 		ans_x += ans_y;
-		
+
 		ans_x %= MOD;
 	}
 
 	return ans_x;
 }
-
 
 int main()
 {
@@ -91,10 +90,10 @@ int main()
 
 	for (int i = 0; i < N; ++i)
 	{
-		long long termOne = (i * (B[i].first % MOD)) % MOD;
-		
-		long long termTwo = ((N - i - 1) * (B[i].second % MOD)) % MOD;
-		
+		long long termOne = (i * B[i].first) % MOD;
+
+		long long termTwo = ((N - i - 1) * B[i].second) % MOD;
+
 		long long ans_i = (termOne - termTwo + MOD) % MOD;
 
 		ans += ans_i;
