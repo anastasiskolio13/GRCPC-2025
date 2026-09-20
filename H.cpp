@@ -37,7 +37,6 @@ long long calculateDP(long long X)
 			for (int j = 0; j <= D[i] - 1; ++j)
 			{
 				dp[i][x][0] += dp[i - 1][x ^ j][1];
-				dp[i][x][0] %= MOD;
 			}
 
 			dp[i][x][1] = 0;
@@ -45,7 +44,6 @@ long long calculateDP(long long X)
 			for (int j = 0; j <= 9; ++j)
 			{
 				dp[i][x][1] += dp[i - 1][x ^ j][1];
-				dp[i][x][1] %= MOD;
 			}
 		}
 	}
