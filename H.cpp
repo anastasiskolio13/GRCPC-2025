@@ -8,14 +8,15 @@ constexpr long long MOD = 1e9 + 7;
 
 long long calculateDP(long long X)
 {
-	vector<int> D = {0};
+	vector<int> D = { 0 };
 
-	while (X > 0)
+	do
 	{
 		D.push_back(X % 10);
 
 		X /= 10;
-	}
+
+	} while (X > 0);
 
 	const int L = D.size() - 1;
 
@@ -81,7 +82,7 @@ int main()
 
 	for (int i = 0; i < N; ++i)
 	{
-		B[i] = make_pair(calculateDP(A[i]), calculateDP(A[i] - 1));
+		B[i] = make_pair(calculateDP(A[i]), A[i] >= 1 ? calculateDP(A[i] - 1) : 0);
 	}
 
 	long long ans = 0;
