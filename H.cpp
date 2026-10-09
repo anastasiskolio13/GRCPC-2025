@@ -8,7 +8,12 @@ constexpr long long MOD = 1e9 + 7;
 
 long long calculateDP(long long X)
 {
-	vector<int> D = { 0 };
+	if (X < 0)
+	{
+		return 0;
+	}
+
+	vector<int> D = {0};
 
 	do
 	{
@@ -82,7 +87,7 @@ int main()
 
 	for (int i = 0; i < N; ++i)
 	{
-		B[i] = make_pair(calculateDP(A[i]), A[i] >= 1 ? calculateDP(A[i] - 1) : 0);
+		B[i] = make_pair(calculateDP(A[i]), calculateDP(A[i] - 1));
 	}
 
 	long long ans = 0;
