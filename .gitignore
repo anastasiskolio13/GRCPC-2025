@@ -1,21 +1,10 @@
-.vs/
-*.user
-**/x64/Debug/
-**/x64/Release/
-**/Debug/
-**/Release/
-*.ilk
-*.log
-*.pdb
-*.idb
-*.exe
-*.tlog/
-*Editorial.aux
-*Editorial.fdb_latexmk
-*Editorial.fls
-*Editorial.log
-*Editorial.out
-*Editorial.tex
-Editorial.synctex.gz
-*GRCPCLogo.png
-desktop.ini
+# Ignore everything…
+*
+
+# …but keep looking inside folders,
+!*/
+
+# and track only the solutions, the compiled editorial and this file.
+!Code/*.cpp
+!Editorial/Editorial.pdf
+!.gitignore
